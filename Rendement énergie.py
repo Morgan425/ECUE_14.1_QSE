@@ -6,12 +6,12 @@ import openpyxl as xl
 charge_efficiency=0.9
 sell_efficiency=0.9
 
-sell_price=150
-buy_price=20
+sell_price=60
+buy_price=24
 
 storage_capacity=10  # MWh
-charge_flux=1  
-sell_flux=1
+charge_flux=10
+sell_flux=10
 
 Energy_xl=xl.load_workbook('Prix_energie.xlsx').active
 Energy_Price=[]
@@ -45,17 +45,26 @@ for t in range(1,temps):
 potential_benefit=round(Benefit[-1]+Storage[-1]*sell_efficiency*Energy_Price[-1],2)
 print(f'Potential benefit (if all remaining energy sold): {potential_benefit}€')
 
+
 fig,(ax1,ax2,ax3)=plt.subplots(3,1,sharex=True)
-ax2.plot(Storage)
-ax2.set_title('Storage')
 
 ax1.plot(Benefit,'g')
 ax1.set_title('Benefit')
 ax1.axhline(0,color='black')
 ax1.scatter(len(Energy_Price),potential_benefit,color='g')
+ax1.grid('on')
 
-ax3.plot(Energy_Price,'r')
+
+ax2.plot(Storage)
+ax2.set_title('Storage')
+ax2.grid('on')
+
+ax3.plot(Energy_Price,'orange')
 ax3.set_title('Energy_Price')
+ax3.grid('on')
+ax3.axhline(sell_price,color='r')
+ax3.axhline(buy_price,color='g')
+
 plt.show()
 
 
