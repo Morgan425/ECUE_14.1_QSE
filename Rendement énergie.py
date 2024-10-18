@@ -6,12 +6,12 @@ import openpyxl as xl
 charge_efficiency=0.9
 sell_efficiency=0.9
 
-sell_price=60
+sell_price=80
 buy_price=24
 
 storage_capacity=10  # MWh
-charge_flux=10
-sell_flux=10
+charge_flux=2
+sell_flux=2
 
 Energy_xl=xl.load_workbook('Prix_energie.xlsx').active
 Energy_Price=[]
