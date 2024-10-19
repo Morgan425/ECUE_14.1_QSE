@@ -5,8 +5,8 @@ import openpyxl as xl
 
 #Parameters
 
-sell_price=120
-buy_price=24
+sell_price=80
+buy_price=20
 
 charge_efficiency=0.9
 sell_efficiency=0.9
@@ -14,7 +14,7 @@ sell_efficiency=0.9
 initial_storage_percentage=0
 storage_capacity=10  # MWh
 
-sell_characteristic=1.2      # Quantité par laquelle la charge est divisée en 1h
+sell_characteristic=1.2     # Quantité par laquelle la charge est divisée en 1h
 constant_buy_flux=1
 
 CC_threshold=0.8
