@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import openpyxl as xl
 
 
-#### Parameters ####
+#### Parameters ############################################################################################################
 
 #sell_price=83
 #buy_price=21
@@ -21,7 +21,7 @@ CC_threshold=0.8                # Niveau de charge entre les 2 étapes du charge
 
 mean_number=10                  # Période sur laquelle on fait la moyenne pour la décision d'achat ou de vente
 
-#####
+############################################################################################################################
 
 Energy_xl=xl.load_workbook('Prix_energie.xlsx').active        #
 Energy_Price=[]                                               # Récupération des données du prix de lélectricité
