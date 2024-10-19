@@ -5,8 +5,8 @@ import openpyxl as xl
 
 #Parameters
 
-sell_price=80
-buy_price=20
+sell_price=83
+buy_price=21
 
 charge_efficiency=0.9
 sell_efficiency=0.9
@@ -27,6 +27,17 @@ Energy_Price=[]
 for row in Energy_xl.iter_rows(min_row=2,values_only=True):
     Energy_Price.append(float(row[1]))
 
+mean_number=5
+Energy_prices_mean=[Energy_Price[0] for k in range(mean_number)]
+for i in range(mean_number,len(Energy_Price)-mean_number):
+    Energy_prices_mean.append(sum(Energy_Price[i-mean_number:i+mean_number])/(2*mean_number))
+for j in range(mean_number):
+    Energy_prices_mean.append(Energy_prices_mean[len(Energy_Price)-mean_number-1])
+
+
+
+
+
 temps=len(Energy_Price)
 
 
@@ -39,7 +50,7 @@ Storage[0]=storage_capacity*initial_storage_percentage
 for t in range(1,temps):
     price=Energy_Price[t]
 
-    if price<buy_price:
+    if price<Energy_prices_mean[t]-(10*(1-sell_efficiency)):
         if Storage[t-1]<CC_threshold*storage_capacity:
             bought_energy=min(constant_buy_flux*charge_efficiency,storage_capacity-Storage[t-1])
         else:
@@ -48,7 +59,7 @@ for t in range(1,temps):
         Storage[t]=Storage[t-1]+bought_energy
         Benefit[t]=Benefit[t-1]-((bought_energy*price)/charge_efficiency)
 
-    elif price>sell_price:
+    elif price>Energy_prices_mean[t]+(10*(1-charge_efficiency)):
         Storage[t]=round(Storage[t-1]/sell_characteristic,3)
         selled_energy=Storage[t-1]-Storage[t]
         Benefit[t]=Benefit[t-1]+selled_energy*price*sell_efficiency
@@ -80,6 +91,9 @@ ax3.set_title('Energy_Price')
 ax3.grid('on')
 ax3.axhline(sell_price,color='r')
 ax3.axhline(buy_price,color='g')
+
+ax3.plot(Energy_prices_mean,'purple')
+
 
 plt.show()
 
