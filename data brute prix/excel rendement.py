@@ -4,7 +4,16 @@ import numpy as np
 
 Prix_liste=[]
 
-for j in range(12,19):
+data_j=xl.load_workbook(f'GUI_ENERGY_PRICES_202409302200-202410012200.xlsx',read_only=True)
+data_j_s=data_j.active
+h=0
+for row in data_j_s.iter_rows(min_row=8,min_col=2,max_col=2,max_row=50,values_only=True):
+    h+=1
+    prix=float(row[0])
+    date=(j-12)*24+h
+    Prix_liste.append(prix)
+
+for j in range(2,21):
     data_j=xl.load_workbook(f'GUI_ENERGY_PRICES_202410{j-1}2200-202410{j}2200.xlsx',read_only=True)
     data_j_s=data_j.active
     h=0
