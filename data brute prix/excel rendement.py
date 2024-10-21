@@ -10,7 +10,7 @@ h=0
 for row in data_j_s.iter_rows(min_row=8,min_col=2,max_col=2,max_row=50,values_only=True):
     h+=1
     prix=float(row[0])
-    date=(j-12)*24+h
+    date=h
     Prix_liste.append(prix)
 
 for j in range(2,21):
@@ -20,7 +20,7 @@ for j in range(2,21):
     for row in data_j_s.iter_rows(min_row=8,min_col=2,max_col=2,max_row=50,values_only=True):
         h+=1
         prix=float(row[0])
-        date=(j-12)*24+h
+        date=(j-1)*24+h
         Prix_liste.append(prix)
 
 Prix_energie=xl.Workbook()

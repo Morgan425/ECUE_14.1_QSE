@@ -15,11 +15,17 @@ initial_storage_percentage=0    # énergie initiale dans la batterie (%)
 storage_capacity=10             # Capacité tootale de la batterie (MWh)
 
 sell_characteristic=1.2         # Quantité par laquelle la charge est divisée en 1h
-constant_buy_flux=1             # Vitesse de charge de la batterie pendant l'étape de charge continue
-
+constant_buy_flux=1           # Vitesse de charge de la batterie pendant l'étape de charge continue
 CC_threshold=0.8                # Niveau de charge entre les 2 étapes du chargement
 
-mean_number=10                  # Période sur laquelle on fait la moyenne pour la décision d'achat ou de vente
+mean_number=15                  # Période sur laquelle on fait la moyenne pour la décision d'achat ou de vente
+
+
+constant_cost=0.5
+energy_cost=0.005
+storage_cost=0.2
+
+storage_decay=0.01
 
 ############################################################################################################################
 
@@ -54,18 +60,23 @@ for t in range(1,temps):
         else:                                                       # Etape de fin de charge
             remaining_storage_percentage=(storage_capacity-Storage[t-1])/(storage_capacity * (1-CC_threshold))
             bought_energy=constant_buy_flux * charge_efficiency * remaining_storage_percentage
-        Storage[t]=Storage[t-1] + bought_energy
+        Storage[t]=Storage[t-1] + bought_energy - storage_decay
         Benefit[t]=Benefit[t-1] - ((bought_energy * price)/charge_efficiency)
 
 
     elif price > Energy_prices_mean[t] / discharge_efficiency:  # Cas de vente: l'énergie effectivement vendue est à un prix supérieur à sa moyenne sur une plus grande période
         Storage[t]=round(Storage[t-1] / sell_characteristic,3)
         selled_energy=Storage[t-1] - Storage[t]
-        Benefit[t]=Benefit[t-1] + selled_energy * price * discharge_efficiency
+        Benefit[t]=Benefit[t-1] + (selled_energy * price * discharge_efficiency)
     
     else:                                                       # Aucune action effectuée
         Benefit[t]=Benefit[t-1]
         Storage[t]=Storage[t-1]
+    
+    maintenance_cost= constant_cost + energy_cost*price + storage_cost*Storage[t]
+    Storage[t]*= (1-storage_decay)
+    Benefit[t]-= maintenance_cost
+
 
 potential_benefit=round(Benefit[-1] + Storage[-1] * discharge_efficiency * Energy_Price[-1],2)  # Calcul du bénéfice potentiel en rajoutant au bénéfice la valeur finale de l'énergie stockée
 print(f'Potential benefit (if all remaining energy sold): {potential_benefit}€')
